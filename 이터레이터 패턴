@@ -1,0 +1,169 @@
+다운 캐스트 공부하다가 함수로 부모클래스리스트에서 매개변수로 넣은 자식클래스를 불러올 수 있을지 궁금해서 찾아보다 발견해서 내용 정리함
+코드 출처 (https://jusungpark.tistory.com/25)
+
+
+이터레이터 패턴 (iterator pattern)
+컬렉션 구현 방법을 노출시키지 않으면서도 그 집합체 안에 들어있는 모든 항목에 접근할 수 있는 방법을 제공한다.
+
+
+컬렉션 객체 안에 들어있는 모든 항목에 접근하는 방식이 통일되어 있으면 어떤 종류의 집합체에 대해서도 사용할 수 있는 다형적인 코드를 만들수 있다.
+이터레이터 패턴을 사용하면 모든 항목에 일일이 접근하는 작업을 컬렉션 객체가 아닌 반복자 객체에서 맡게 된다. 
+이렇게 하면 집합체의 인터페이스 및 구현이 간단해질 뿐 아니라, 집합체에서는 반복작업에서 손을 떼고 원래 자신이 할 일(객체 컬렉션 관리)에만 전념할 수 있다.
+
+// 방법 1
+public class PancakeHouseMenu
+    {
+        private ArrayList<MenuItem> menuItems;
+
+        public PancakeHouseMenu()
+        {
+            this.menuItems = new ArrayList();
+            additem("K&B 팬케이크 세트","스크램블드 에그와 토스트가 곁들여진 펜케이크",true,2.99);
+            additem("레귤러 팬케이크 세트","달걀 후라이와 소시지가 곁들여진 펜케이크",false,2.99);
+            additem("블루베리 펜케이크","신선한 블루베리와 블루베리 시럽으로 만든 펜케이크",true,3.49);
+            additem("와플","와플, 취향에 따라 블루베리나 딸기를 얹을 수 있습니다.",true,3.59);
+        }
+
+        public void additem(string name, String description, boolean vegetarian, double price)
+        {
+            MenuItem menuItem = new MenuItem(name, description, vegetarian, price);
+            menuItem.add(menuItem);
+        }
+
+        public ArrayList<MenuItem> getMenuItems()
+        {
+            return menuItems;
+        }
+    }
+
+
+//방법 2
+    public class MenuItem
+    {
+        private String name;
+        private String description;
+        private String vegetarian;
+        private double price;
+
+        public MenuItem(String name, String description, boolean vegetarian, double price)
+        {
+            this.nae = name;
+            this.description = description;
+            this.vegetarian = vegetarian;
+            this.price = price;
+        }
+
+        public String getName()
+        {
+            return name;
+        }
+
+        public String getDescription()
+        {
+            return description;
+        }
+
+        public double getPrice()
+        {
+            return price;
+        }
+
+        public boolean isVegetarina()
+        {
+            return vegetarian;
+        }
+    }
+  
+  
+  
+// 방법3
+    public class DinerMenu
+    {
+        static final
+        private int MAX_ITEMS = 6;
+        private int numberOfItems = 0;
+        private MenuItem[] menuItems;
+
+        public DinerMenu()
+        {
+            this.menuItems = new MenuItem[MAX_ITEMS];
+            additem("채식주의자용 BLT","통밀 위에 (식물성)베이컨, 상추, 토마토를 얹은 메뉴",true,2.99);
+            additem("BLT","통밀 위에 베이컨, 상추, 토마토를 얹은 메뉴",false,2.99);
+            additem("오늘의 스프","감자 샐러드를 곁들인 오늘의 스프",false,3.29);
+            additem("핫도그","사워크라우트, 갖은 양념, 양파, 치즈가 곁들여진 핫도그",false,3.05);
+        }
+
+        public void additem(string name, String description, boolean vegetarian, double price)
+        {
+            MenuItem menuItem = new MenuItem(name, description, vegetarian, price);
+            if (nemberOfItems >= MAX_ITEMS)
+            {
+                System.err.printIn("죄송합니다, 메뉴가 꽉 찼습니다. 더 이상 추가할 수 없습니다.");
+            }
+            else
+            {
+                menuItems[numberOfItems] = menuItem;
+                numberOfItems = numberOfItems+1;
+            }
+        }
+
+        public MenuItem[] getMenuItems()
+        {
+            return menuItems;
+        }
+    }  
+  
+  
+  
+이런식으로 방법 세 개가 있다고 치고
+두 메뉴를 사용하는 클라이언트를 만들었을 때 
+
+1. printMenu() - 메뉴에 있는 모든 항목을 출력
+2. printBreakfastMenu() - 아침 식사 항목만 출력
+3. printLunchMenu() - 점심 식사 항목만 출력
+4. printVegetarianMenu() - 채식주의자용 메뉴 항목만 출력
+5. isItemVegetarian(name) - name 항목이 채식주의자용이면 true 그렇지 않으면 false를 리턴.
+
+각 메뉴에 있는 모든 항목을 출력하려면
+
+PancakeHouseMenu pancakeHouseMenu = new PancakeHouseMenu();
+ArrayList<MenuItem> breakfastItems = pancakeHouseMenu.getMenuItems();
+
+DinerMenu dinerMenu = new DinerMenu();
+MenuItem[] lunchItems = dinerMenu.getMenuItems();
+
+for ( int i=0; i < breakfaseItems.size(); i++) {
+      MenuItem menuItem = breakfastItems.get(i);
+      System.out.println(menuItem.getName());
+      System.out.println(menuItem.getPrice());
+      System.out.println(menuItem.getDescription());
+}
+      
+for ( int i=0; i < lunchItems.length; i++) {
+      MenuItem menuItem = lunchItems[i];
+      System.out.println(menuItem.getName());
+      System.out.println(menuItem.getPrice());
+      System.out.println(menuItem.getDescription());
+ }
+ 
+다른 모든 메소드들도 결국 위에 있는 코드랑 비슷한 식으로 작성해야 한다.. 항상 두 메뉴를 이용하고, 각아이템에 대해서 반복적인 작업을 수행하기 위해 두 개의 순환문을 써야 한다. 이후에 식당이 더 추가된다면 이런상황이 게속 반복된다.
+
+이런 부분을 캡슐화 해주면 좋다.
+아래와 같이 반복작업을 캡슐화한 Iterator 객체를 만들면 됨
+
+
+// Iterator 캡슐화
+    Iterator<MenuItem> iterator = breakfastMenu.createIterator();
+    while (iterator.hasNext())
+    {
+        MenuItem menuItem = iterator.next();
+    }
+
+    iterator<MenuItem> iterator = lunchMenu.createIterator();
+    while (iterator.hasNext())
+    {
+        MenuItem menuItem = iterator.next()
+    }
+
+요런식으로 캡슐화 하는 거임.
+
