@@ -19,7 +19,7 @@
     //      대충 카메라 앞에 위치시켜주자.
     
     
-    // Camera.ViewportToWorldPoint, Physics.RaycastPermalink
+    // Camera.ViewportToWorldPoint, Physics.Raycast
     public class RayInteration : MonoBehaviour
     {
         private Camera playerCam;
